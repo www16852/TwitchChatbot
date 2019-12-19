@@ -62,5 +62,12 @@
     "label": "Not enough currency response",
     "tooltip": "Message sent when user doesn't have enough points \r\n {0} = user \r\n {1} = Currencyname",
     "group": "回應"
+  },
+  "KillSucessResponse": {
+    "type": "textbox",
+    "value": "{0} managed to steal {1} {2} from {3}",
+    "label": "Win response",
+    "tooltip": "Message sent when user wins \r\n {0} = user \r\n {1} = value won \r\n {2} = points after win \r\n {3} = Currency name",
+    "group": "回應"
   }
 }
