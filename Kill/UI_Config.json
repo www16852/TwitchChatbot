@@ -2,7 +2,7 @@
   "output_file": "settings.json",
     "Command": {
     "type": "textbox",
-    "value": "!steal",
+    "value": "!kill",
   	"label": "指令",
     "tooltip": "The command the bot will respond to",
   	"group": "General"
@@ -20,5 +20,47 @@
     "value": 10,
     "tooltip": "死去時間",
     "group": "General"
+  },
+  "UseCD": {
+    "type": "checkbox",
+    "value": false,
+    "label": "Use Cooldown Messages",
+    "tooltip": "Enable/Disable cooldown messages",
+    "group": "Cooldown"
+  },
+  "Cooldown": {
+    "type": "numberbox",
+    "label": "Cooldown (seconds)",
+    "value": 0,
+    "tooltip": "Cooldown in seconds.",
+    "group": "Cooldown"
+  },
+  "OnCooldown": {
+    "type": "textbox",
+    "value": "{0} 這指令在CD {1} 秒!",
+    "label": "Cooldown Response",
+    "tooltip": "The message that the bot will display when the command is on cooldown. \r\n {0} = user \r\n {1} = time remaining",
+    "group": "Cooldown"
+  },
+  "UserCooldown": {
+    "type": "numberbox",
+    "label": "User Cooldown (seconds)",
+    "value": 10,
+    "tooltip": "User cooldown in seconds.",
+    "group": "Cooldown"
+  },
+  "OnUserCooldown": {
+    "type": "textbox",
+    "value": "{0} 這指令在CD on user for {1} seconds!",
+    "label": "User Cooldown Response",
+    "tooltip": "The message that the bot will display when the command is on user cooldown. \r\n {0} = user \r\n {1} = time remaining",
+    "group": "Cooldown"
+  },
+  "NotEnoughResponse": {
+    "type": "textbox",
+    "value": "{0} you don't have enough {1} to attempt this!",
+    "label": "Not enough currency response",
+    "tooltip": "Message sent when user doesn't have enough points \r\n {0} = user \r\n {1} = Currencyname",
+    "group": "回應"
   }
 }

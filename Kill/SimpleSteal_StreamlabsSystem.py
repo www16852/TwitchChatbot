@@ -44,10 +44,19 @@ class Settings:
         if settingsFile and os.path.isfile(settingsFile):
             with codecs.open(settingsFile, encoding='utf-8-sig', mode='r') as f:
                 self.__dict__ = json.load(f, encoding='utf-8-sig')
+        #正常不會跑else 不過放著這樣看參數比較方便
+        #><
         else:
             self.Command = "!kill"
             self.Cost = 10
             self.DeadTime = 10
+            self.UseCD = True
+            self.Cooldown = 5
+            self.OnCooldown = "{0} the command is still on cooldown for {1} seconds!"
+            self.UserCooldown = 10
+            self.OnUserCooldown = "{0} the command is still on user cooldown for {1} seconds!"
+            self.NotEnoughResponse = "{0} you don't have enough {1} to attempt this!"
+            self.KillSucessResponse = "{0} Kill {1} pay {2}"
 
     # Reload settings on save through UI
     def ReloadSettings(self, data):
@@ -102,13 +111,19 @@ def Init():
 
 def Execute(data):
     if data.IsChatMessage() and data.GetParam(0) == MySet.Command:
+        if IsOnCooldown(data):
+            return
+
         if Parent.RemovePoints(data.User, data.UserName, MySet.Cost):
             user_name = data.GetParam(1)
             SendResp(data, "/timeout {0} {1}".format(user_name, MySet.DeadTime))
+            message = MySet.KillSucessResponse.format(data.UserName, user_name, MySet.Cost)
+            SendResp(data, message)
+            AddCooldown(data)
             return
         else:
-            SendResp(data, "錢不夠==")
-            # message = MySet.NotEnoughResponse.format(data.UserName, Parent.GetCurrencyName())
+            message = MySet.NotEnoughResponse.format(data.UserName, Parent.GetCurrencyName())
+            SendResp(data, message)
 
 def Tick():
     """Required tick function"""
@@ -158,3 +173,33 @@ def CheckUsage(data, rUsage):
 
     return False
 
+def IsOnCooldown(data):
+    """Return true if command is on cooldown and send cooldown message if enabled"""
+    cooldown = Parent.IsOnCooldown(ScriptName, MySet.Command)
+    userCooldown = Parent.IsOnUserCooldown(ScriptName, MySet.Command, data.User)
+    # SendResp(data, "cooldown {0} userCooldown {1}".format(cooldown, userCooldown))
+    if (cooldown or userCooldown):
+
+        if MySet.UseCD:
+            cooldownDuration = Parent.GetCooldownDuration(ScriptName, MySet.Command)
+            userCDD = Parent.GetUserCooldownDuration(ScriptName, MySet.Command, data.User)
+
+            if cooldownDuration > userCDD:
+                m_CooldownRemaining = cooldownDuration
+
+                message = MySet.OnCooldown.format(data.UserName, m_CooldownRemaining)
+                SendResp(data, message)
+
+            else:
+                m_CooldownRemaining = userCDD
+
+                message = MySet.OnUserCooldown.format(data.UserName, m_CooldownRemaining)
+                SendResp(data, message)
+        return True
+    return False
+
+def AddCooldown(data):
+    """add cooldowns"""
+    Parent.AddUserCooldown(ScriptName, MySet.Command, data.User, MySet.UserCooldown)
+    Parent.AddCooldown(ScriptName, MySet.Command, MySet.Cooldown)
+        
