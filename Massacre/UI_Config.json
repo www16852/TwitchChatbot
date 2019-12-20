@@ -1,0 +1,45 @@
+﻿{
+  "output_file": "settings.json",
+    "Command": {
+    "type": "textbox",
+    "value": "!大屠殺",
+  	"label": "指令",
+    "tooltip": "The command the bot will respond to",
+  	"group": "General"
+  },
+  "Cost": {
+    "type": "numberbox",
+    "label": "花費",
+    "value": 10,
+    "tooltip": "Cost to use the command",
+    "group": "General"
+  },
+    "Duration": {
+    "type": "numberbox",
+    "label": "持續時間 (seconds)",
+    "value": 20,
+    "tooltip": "持續時間",
+    "group": "General"
+  },
+  "DeadTime": {
+    "type": "numberbox",
+    "label": "死去時間 (seconds)",
+    "value": 10,
+    "tooltip": "死去時間",
+    "group": "General"
+  },
+  "NotEnoughResponse": {
+    "type": "textbox",
+    "value": "{0} you don't have enough {1} to attempt this!",
+    "label": "Not enough currency response",
+    "tooltip": "Message sent when user doesn't have enough points \r\n {0} = user \r\n {1} = Currencyname",
+    "group": "回應"
+  },
+  "SucessResponse": {
+    "type": "textbox",
+    "value": "{0} 開啟大屠殺",
+    "label": "Win response",
+    "tooltip": "Message sent when user wins \r\n {0} = user \r\n {1} = value won \r\n {2} = points after win \r\n {3} = Currency name",
+    "group": "回應"
+  }
+}

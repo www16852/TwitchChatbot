@@ -1,5 +1,5 @@
 ﻿var settings = {
-  "Command": "!kill",
+  "Command": "!kill1",
   "Cost": 10,
   "DeadTime": 10,
   "UseCD": false,

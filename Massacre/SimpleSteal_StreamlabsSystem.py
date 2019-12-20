@@ -15,11 +15,11 @@ import random
 # ---------------------------------------
 # [Required] Script information
 # ---------------------------------------
-ScriptName = "Kill"
+ScriptName = "大屠殺"
 Website = "https://www.twitch.tv/www16852"
 Creator = "www16852"
 Version = "1"
-Description = "Simple Kill command"
+Description = "大屠殺"
 # ---------------------------------------
 # Versions
 # ---------------------------------------
@@ -41,22 +41,27 @@ class Settings:
 
     # The 'default' variable names need to match UI_Config
     def __init__(self, settingsFile=None):
-        if settingsFile and os.path.isfile(settingsFile):
-            with codecs.open(settingsFile, encoding='utf-8-sig', mode='r') as f:
-                self.__dict__ = json.load(f, encoding='utf-8-sig')
+        # if settingsFile and os.path.isfile(settingsFile):
+        #     with codecs.open(settingsFile, encoding='utf-8-sig', mode='r') as f:
+        #         self.__dict__ = json.load(f, encoding='utf-8-sig')
         #正常不會跑else 不過放著這樣看參數比較方便
         #><
-        else:
-            self.Command = "!kill"
+        # else:
+            self.Command = "!大屠殺"
             self.Cost = 10
-            self.DeadTime = 10
+            self.Duration = 20
+            self.DeadTime = 1
+            self.SucessResponse = "{0} 開啟大屠殺"
+            self.NotEnoughResponse = "{0} you don't have enough {1} to attempt this!"
+
+            
             self.UseCD = True
             self.Cooldown = 5
             self.OnCooldown = "{0} the command is still on cooldown for {1} seconds!"
             self.UserCooldown = 10
             self.OnUserCooldown = "{0} the command is still on user cooldown for {1} seconds!"
-            self.NotEnoughResponse = "{0} you don't have enough {1} to attempt this!"
-            self.KillSucessResponse = "{0} Kill {1} pay {2}"
+            # self.NotEnoughResponse = "{0} you don't have enough {1} to attempt this!"
+            # self.KillSucessResponse = "{0} Kill {1} pay {2}"
 
     # Reload settings on save through UI
     def ReloadSettings(self, data):
@@ -110,15 +115,12 @@ def Init():
 
 
 def Execute(data):
+    if IsOnCooldown(data) and data.IsChatMessage():
+        SendResp(data, "/timeout {0} {1}".format(data.User, MySet.DeadTime))
     if data.IsChatMessage() and data.GetParam(0) == MySet.Command:
-        if IsOnCooldown(data):
-            return
-
         if Parent.RemovePoints(data.User, data.UserName, MySet.Cost):
             user_name = data.GetParam(1)
-            
-            SendResp(data, "/timeout {0} {1}".format(user_name, MySet.DeadTime))
-            message = MySet.KillSucessResponse.format(data.UserName, user_name, MySet.Cost)
+            message = MySet.SucessResponse.format(data.UserName)
             SendResp(data, message)
             AddCooldown(data)
             return
@@ -177,30 +179,12 @@ def CheckUsage(data, rUsage):
 def IsOnCooldown(data):
     """Return true if command is on cooldown and send cooldown message if enabled"""
     cooldown = Parent.IsOnCooldown(ScriptName, MySet.Command)
-    userCooldown = Parent.IsOnUserCooldown(ScriptName, MySet.Command, data.User)
     # SendResp(data, "cooldown {0} userCooldown {1}".format(cooldown, userCooldown))
-    if (cooldown or userCooldown):
-
-        if MySet.UseCD:
-            cooldownDuration = Parent.GetCooldownDuration(ScriptName, MySet.Command)
-            userCDD = Parent.GetUserCooldownDuration(ScriptName, MySet.Command, data.User)
-
-            if cooldownDuration > userCDD:
-                m_CooldownRemaining = cooldownDuration
-
-                message = MySet.OnCooldown.format(data.UserName, m_CooldownRemaining)
-                SendResp(data, message)
-
-            else:
-                m_CooldownRemaining = userCDD
-
-                message = MySet.OnUserCooldown.format(data.UserName, m_CooldownRemaining)
-                SendResp(data, message)
+    if (cooldown):
         return True
     return False
 
 def AddCooldown(data):
     """add cooldowns"""
-    Parent.AddUserCooldown(ScriptName, MySet.Command, data.User, MySet.UserCooldown)
-    Parent.AddCooldown(ScriptName, MySet.Command, MySet.Cooldown)
+    Parent.AddCooldown(ScriptName, MySet.Command, MySet.Duration)
         

@@ -1,4 +1,4 @@
-﻿var settings = {
+﻿{
   "Command": "!kill",
   "Cost": 10,
   "DeadTime": 10,
@@ -9,4 +9,4 @@
   "OnUserCooldown": "{0} 這指令在CD on user for {1} seconds!",
   "NotEnoughResponse": "{0} you don't have enough {1} to attempt this!",
   "KillSucessResponse": "123"
-};
+}
